@@ -10,8 +10,34 @@ func printSomething(s string, wg *sync.WaitGroup) {
 	fmt.Println(s)
 }
 
+var msg string
+var wg sync.WaitGroup
+
+func updateMessage(s string, mutex *sync.Mutex) {
+	defer wg.Done()
+
+	mutex.Lock()
+	msg = msg + s
+	mutex.Unlock()
+
+}
+
 func main() {
-	var wg sync.WaitGroup
+	msg = "Hello World"
+
+	var mutex sync.Mutex
+
+	wg.Add(2)
+	go updateMessage("Hello, universe", &mutex)
+	go updateMessage("Hello, cosmos", &mutex)
+
+	wg.Wait()
+
+	fmt.Println(msg)
+
+}
+
+func waitgroupTest() {
 	words := []string{"alpha", "beta", "delta", "gamma", "pi", "zeta", "eta", "theta", "epsilon"}
 
 	wg.Add(len(words))
