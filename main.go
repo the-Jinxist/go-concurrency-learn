@@ -1,11 +1,12 @@
 package main
 
 import (
-	complexmutexexample "github.com/the-Jinxist/go-concurrency-learn/complex-mutex-example"
+	producerconsumer "github.com/the-Jinxist/go-concurrency-learn/producer-consumer"
 )
 
 func main() {
 
-	complexmutexexample.Example()
+	// complexmutexexample.Example()
+	producerconsumer.Start()
 
 }
