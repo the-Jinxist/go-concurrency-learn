@@ -93,7 +93,22 @@ func pizzeria(pizzamaker *Producer) {
 	var i = 0
 
 	for {
-		_ = makePizza(i)
+		currentPizza := makePizza(i)
+		if currentPizza != nil {
+			i = currentPizza.pizzaNumber
+			select {
+			case pizzamaker.data <- *currentPizza:
+
+			case quitChan := <-pizzamaker.quit:
+				{
+					//close channels
+					close(pizzamaker.data)
+					close(quitChan)
+					return
+				}
+
+			}
+		}
 
 	}
 
