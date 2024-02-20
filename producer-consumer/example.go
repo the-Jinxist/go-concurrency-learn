@@ -41,6 +41,42 @@ func Start() {
 
 	go pizzeria(pizzaJob)
 
+	for i := range pizzaJob.data {
+		if i.pizzaNumber <= NoOfPizzas {
+			if i.success {
+				color.Green(i.message)
+				color.Green("Order %d is out for delivery!", i.pizzaNumber)
+			} else {
+				color.Red(i.message)
+				color.Red("Order %d failed!", i.pizzaNumber)
+			}
+
+		} else {
+			color.Cyan("Done making pizzas")
+			if err := pizzaJob.Close(); err != nil {
+				color.Red("error closing channel", err)
+			}
+
+		}
+	}
+
+	color.Cyan("----------------------------")
+	color.Cyan("Done for the day")
+
+	color.Cyan("We made %d pizzas but failed to make %d, with %d attemps in total", pizzasMade, pizzasFailed, total)
+	switch {
+	case pizzasFailed > 9:
+		color.Red("it was an awful day")
+	case pizzasFailed > 6:
+		color.Red("it was not a very good day..")
+	case pizzasFailed > 4:
+		color.Yellow("it was an okay day..")
+	case pizzasFailed >= 2:
+		color.Yellow("it was a pretty good day")
+	default:
+		color.Green("it was a great day")
+	}
+
 }
 
 func makePizza(pizzaNumber int) *PizzaOrder {
