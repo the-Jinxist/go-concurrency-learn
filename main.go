@@ -1,12 +1,13 @@
 package main
 
 import (
-	producerconsumer "github.com/the-Jinxist/go-concurrency-learn/producer-consumer"
+	diningphilosophers "github.com/the-Jinxist/go-concurrency-learn/dining-philosophers"
 )
 
 func main() {
 
 	// complexmutexexample.Example()
-	producerconsumer.Start()
+	// producerconsumer.Start()
+	diningphilosophers.Example()
 
 }
