@@ -55,6 +55,10 @@ func Example() {
 
 func dine() {
 
+	eatTime = 0 * time.Second
+	sleepTime = 0 * time.Second
+	thinkTime = 0 * time.Second
+
 	wg := &sync.WaitGroup{}
 	wg.Add(len(philosophers))
 
@@ -77,4 +81,45 @@ func dine() {
 
 func diningProblem(philosopher Philosopher, wg *sync.WaitGroup, forks map[int]*sync.Mutex, seated *sync.WaitGroup) {
 	defer wg.Done()
+
+	fmt.Printf("%s is seated at the table \n", philosopher.Name)
+	seated.Done()
+
+	seated.Wait()
+
+	for i := hunger; i > 0; i-- {
+
+		if philosopher.LeftFork > philosopher.RightFork {
+			//get a lock on both forks
+			forks[philosopher.RightFork].Lock()
+			fmt.Printf("%s has taken his right fork \n", philosopher.Name)
+
+			forks[philosopher.LeftFork].Lock()
+			fmt.Printf("%s has taken his left fork \n", philosopher.Name)
+
+		} else {
+			//get a lock on both forks
+			forks[philosopher.LeftFork].Lock()
+			fmt.Printf("%s has taken his left fork \n", philosopher.Name)
+
+			forks[philosopher.RightFork].Lock()
+			fmt.Printf("%s has taken his right fork \n", philosopher.Name)
+		}
+
+		fmt.Printf("%s has both forks and is eating \n", philosopher.Name)
+		time.Sleep(eatTime)
+
+		fmt.Printf("%s is thinking \n", philosopher.Name)
+		time.Sleep(thinkTime)
+
+		forks[philosopher.LeftFork].Unlock()
+		forks[philosopher.RightFork].Unlock()
+
+		fmt.Printf("%s put down the forks \n", philosopher.Name)
+
+	}
+
+	fmt.Println(philosopher.Name, " is satisfied. ")
+	fmt.Println(philosopher.Name, " has left the table. ")
+
 }
