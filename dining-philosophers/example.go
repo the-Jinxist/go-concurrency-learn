@@ -34,6 +34,9 @@ var philosophers = []Philosopher{
 	{Name: "Locke", RightFork: 4, LeftFork: 3},
 }
 
+var orderFinished []string
+var orderMutex = &sync.Mutex{}
+
 // define some variables
 var hunger = 3                  // how many times does a person eat
 var eatTime = 1 * time.Second   // how long a person eats
@@ -50,14 +53,15 @@ func Example() {
 	dine()
 
 	fmt.Println("The table is empty")
+	fmt.Printf("Order finished: %v ", orderFinished)
 
 }
 
 func dine() {
 
-	eatTime = 0 * time.Second
-	sleepTime = 0 * time.Second
-	thinkTime = 0 * time.Second
+	// eatTime = 0 * time.Second
+	// sleepTime = 0 * time.Second
+	// thinkTime = 0 * time.Second
 
 	wg := &sync.WaitGroup{}
 	wg.Add(len(philosophers))
@@ -121,5 +125,9 @@ func diningProblem(philosopher Philosopher, wg *sync.WaitGroup, forks map[int]*s
 
 	fmt.Println(philosopher.Name, " is satisfied. ")
 	fmt.Println(philosopher.Name, " has left the table. ")
+
+	orderMutex.Lock()
+	orderFinished = append(orderFinished, philosopher.Name)
+	orderMutex.Unlock()
 
 }
