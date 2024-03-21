@@ -1,13 +1,14 @@
 package main
 
 import (
-	diningphilosophers "github.com/the-Jinxist/go-concurrency-learn/dining-philosophers"
+	sleepingbarber "github.com/the-Jinxist/go-concurrency-learn/sleeping-barber"
 )
 
 func main() {
 
 	// complexmutexexample.Example()
 	// producerconsumer.Start()
-	diningphilosophers.Example()
+	// diningphilosophers.Example()
+	sleepingbarber.SimpleExamples()
 
 }
