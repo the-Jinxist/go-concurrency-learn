@@ -2,6 +2,7 @@ package sleepingbarber
 
 import (
 	"fmt"
+	"log"
 	"strings"
 )
 
@@ -43,7 +44,12 @@ func SimpleExamples() {
 // chan<- means a send-only channel
 func shout(ping <-chan string, pong chan<- string) {
 	for {
-		s := <-ping
+		s, ok := <-ping
+		// ok tells us whether is was a recieved value send on the channel; true
+		// or a zero value sent when the channel was closed or empty
+		if !ok {
+			log.Println("channel is closed")
+		}
 
 		pong <- fmt.Sprintf("%s!!!!", strings.ToUpper(s))
 
