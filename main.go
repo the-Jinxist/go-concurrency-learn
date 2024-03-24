@@ -9,6 +9,6 @@ func main() {
 	// complexmutexexample.Example()
 	// producerconsumer.Start()
 	// diningphilosophers.Example()
-	sleepingbarber.SelectExample()
+	sleepingbarber.BufferedChannelExample()
 
 }
