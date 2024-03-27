@@ -30,6 +30,8 @@ func (shop *Barbershop) addBarber(barber string) {
 			}
 
 			client, shopOpen := <-shop.ClientsChan
+			//shopOpen is true if the channel is still open
+			// it becomes false after close(shop.ClientsChan) has been called
 			if shopOpen {
 				if isSleeping {
 					color.Yellow("%s wakes %s up", client, barber)
@@ -68,12 +70,31 @@ func (shop *Barbershop) closeShopForDay() {
 	shop.Open = false
 
 	for a := 1; a <= shop.NumberOfBarbers; a++ {
+		// this blocks until we get a value specifying that all the barbers are done
 		<-shop.BarbersDoneChan
 		close(shop.BarbersDoneChan)
 
 		color.Green("--------------------------------------------------s")
 		color.Green("Shop is closed for the day. Everyone has gone home")
 
+	}
+
+}
+
+func (shop *Barbershop) addClient(client string) {
+	color.Green("*** %s arrives", client)
+
+	if shop.Open {
+		select {
+		// this actually sends to shop.ClientsChan
+		case shop.ClientsChan <- client:
+			color.Blue(" %s takes a seat in the waiting room", client)
+		// this executes when shop.ClientsChan is full
+		default:
+			color.Red("The waiting room is filled so %s leaves", client)
+		}
+	} else {
+		color.Red("The shop is already closed, so %s leaves", client)
 	}
 
 }
